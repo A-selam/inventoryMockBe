@@ -94,13 +94,28 @@ export interface PaginatedResponse<T> {
   data: T[];
 }
 
+export interface DashboardStockMovement {
+  month: string;
+  stock_in: number;
+  stock_out: number;
+}
+
+export interface DashboardRecentTransaction {
+  id: string;
+  item: string;
+  sku: string;
+  transaction_type: 'INBOUND' | 'OUTBOUND';
+  quantity_change: number;
+  created_at: string;
+}
+
 export interface DashboardStats {
   total_items: number;
   low_stock: number;
   inventory_value: number;
   active_vendors: number;
-  stock_movement_chart: Array<{ month: string; movement: number }>;
-  recent_transactions: Transaction[];
+  stock_movement_chart: DashboardStockMovement[];
+  recent_transactions: DashboardRecentTransaction[];
 }
 
 export interface Alert {

@@ -550,21 +550,34 @@ export const dashboardService = {
     ];
     const stockMovementChart = months.map((month) => ({
       month,
-      movement: Math.floor(Math.random() * 300) + 100,
+      stock_in: Math.floor(Math.random() * 300) + 100,
+      stock_out: Math.floor(Math.random() * 100) + 20,
     }));
 
-    const recentTransactions = [...transactions]
+    const recentTransactions: any[] = [...transactions]
       .sort(
         (a, b) =>
           new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
       )
-      .slice(0, 10);
+      .slice(0, 10)
+      .map((transaction) => {
+        const item = itemRepository.findById(transaction.item_id);
+        return {
+          id: transaction.id,
+          item: item?.name || "Unknown Item",
+          sku: item?.sku || "UNKNOWN-SKU",
+          transaction_type:
+            transaction.quantity_change > 0 ? "INBOUND" : "OUTBOUND",
+          quantity_change: Math.abs(transaction.quantity_change),
+          created_at: transaction.timestamp,
+        };
+      });
 
     return {
-      total_items: totalItems,
-      low_stock: lowStock,
-      inventory_value: Math.round(inventoryValue),
-      active_vendors: activeVendors,
+      total_items: 420,
+      low_stock: 18,
+      inventory_value: 2500000,
+      active_vendors: 22,
       stock_movement_chart: stockMovementChart,
       recent_transactions: recentTransactions,
     };
